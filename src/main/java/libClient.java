@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 
 public class libClient {
     private static final String SERVER_ADDRESS = "localhost";
@@ -19,7 +18,7 @@ public class libClient {
                 printMenu();
                 String command = consoleInput.readLine().toLowerCase();
                 switch (command) {
-                    case "1":
+                    case "list":
                         out.println("list");
                         response = in.readLine();
                         while (response != null && !response.isEmpty()) {
@@ -27,7 +26,7 @@ public class libClient {
                             System.out.println(response);
                         }
                         break;
-                    case "2":
+                    case "borrow":
                         System.out.print("Enter book ID to borrow: ");
                         String borrowId = consoleInput.readLine();
 
@@ -35,14 +34,14 @@ public class libClient {
                         response = in.readLine();
                         System.out.println(response);
                         break;
-                    case "3":
+                    case "return":
                         System.out.print("Enter book ID to return: ");
                         String returnId = consoleInput.readLine();
                         out.println("return " + returnId);
                         response = in.readLine();
                         System.out.println(response);
                         break;
-                    case "4":
+                    case "exit":
                         System.out.println("Exiting...");
                         return;
                     default:

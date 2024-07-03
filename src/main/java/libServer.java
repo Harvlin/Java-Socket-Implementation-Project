@@ -60,6 +60,11 @@ public class libServer {
                             return borrowBook(connection, Integer.parseInt(argument));
                         case "return":
                             return returnBook(connection, Integer.parseInt(argument));
+                        case "delete":
+                            return deleteBook(connection, Integer.parseInt(argument));
+                        case "add":
+                            String[] details = argument.split(", ", 4);
+                            return addBook(connection, Integer.parseInt(details[0]), details[1], details[2], Boolean.parseBoolean(details[3]));
                         default:
                             return "Invalid command";
                     }
@@ -95,12 +100,33 @@ public class libServer {
             }
         }
 
-        private String returnBook(Connection conn, int bookId) throws SQLException {
+        private String returnBook(Connection connection, int bookId) throws SQLException {
             String query = "UPDATE books SET is_borrowed = FALSE WHERE id = ? AND is_borrowed = TRUE";
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, bookId);
-                int rowsUpdated = stmt.executeUpdate();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, bookId);
+                int rowsUpdated = preparedStatement.executeUpdate();
                 return rowsUpdated > 0 ? "Returned successfully" : "Book is not borrowed or does not exist";
+            }
+        }
+
+        private static String deleteBook(Connection connection, int bookId) throws SQLException {
+            String query = "DELETE FROM books WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query))  {
+                preparedStatement.setInt(1, bookId);
+                int rowsUpdated = preparedStatement.executeUpdate();
+                return rowsUpdated > 0 ? "Deleted successfully" : "Book is not added or does not exist";
+            }
+        }
+
+        private static String addBook(Connection connection, int id, String title, String author, boolean is_borrowed) throws SQLException {
+            String query = "INSERT INTO books (id, title,  author, is_borrowed) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query))  {
+                preparedStatement.setInt(1, id);
+                preparedStatement.setString(2, title);
+                preparedStatement.setString(3, author);
+                preparedStatement.setBoolean(4, is_borrowed);
+                int rowsUpdated = preparedStatement.executeUpdate();
+                return rowsUpdated > 0 ? "Added successfully" : "Book is already added";
             }
         }
     }
