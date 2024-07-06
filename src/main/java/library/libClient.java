@@ -6,6 +6,8 @@ import java.net.*;
 public class libClient {
     private static final String SERVER_ADDRESS = "localhost";
     private static final int SERVER_PORT = 3000;
+    private static String username;
+    private static String password;
 
     public static void main(String[] args) {
         try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
@@ -14,6 +16,7 @@ public class libClient {
              BufferedReader consoleInput = new BufferedReader(new InputStreamReader(System.in))) {
 
             System.out.println("Connected to the library server.");
+            authenticateUser(in, out, consoleInput);
 
             while (true) {
                 printMenu();
@@ -37,6 +40,31 @@ public class libClient {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void authenticateUser(BufferedReader in, PrintWriter out, BufferedReader consoleInput) throws IOException {
+        String response;
+        while (true) {
+            response = in.readLine();
+            if (response != null) {
+                System.out.println(response);
+                if (response.contains("Admin or User")) {
+                    System.out.print("Admin or User: ");
+                    String status = consoleInput.readLine();
+                    out.println(status);
+                } else if (response.contains("Enter your name: ")) {
+                    username = consoleInput.readLine();
+                    out.println(username);
+                } else if (response.contains("Enter your password: ") || response.contains("Enter a password: ")) {
+                    password = consoleInput.readLine();
+                    out.println(password);
+                } else if (response.contains("Registered. You can now log in.")) {
+                    break;
+                } else if (response.contains("Wrong password") || response.contains("User doesn't exist")) {
+                    continue;
+                }
+            }
         }
     }
 
