@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 public class libAdmin {
-    private static final String SERVER_ADDRESS = "localhost";
+    private static final String SERVER_ADDRESS = "192.168.6.12";
     private static final int SERVER_PORT = 3000;
     private static String username;
     private static String password;

@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.concurrent.*;
 
 public class libServer {
+    private static final String SERVER_ADDRESS = "192.168.6.12";
     private static final int PORT = 3000;
     private static ExecutorService threadPool = Executors.newCachedThreadPool();
     private static final String DB_URL = "jdbc:mysql://localhost:3306/library";
@@ -13,7 +14,7 @@ public class libServer {
     private static final String DB_USER = "root";
 
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+        try (ServerSocket serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName(SERVER_ADDRESS))) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 threadPool.submit(new ClientHandler(socket));
